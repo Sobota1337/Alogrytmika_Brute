@@ -33,8 +33,7 @@ class MainActivity : AppCompatActivity() {
                     findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
                     findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
                     findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
-                }
-                else if (dlugosc_wzoru <= ilosc_elementow.toInt()) {
+                } else if (dlugosc_wzoru <= ilosc_elementow.toInt()) {
 
                     findViewById<TextView>(R.id.textView_error).text = ""
 
@@ -62,39 +61,27 @@ class MainActivity : AppCompatActivity() {
                 val RK_czas = findViewById<TextView>(R.id.RK_czas)
 
 
-
-
-
                 val BF_wynik_textView = findViewById<TextView>(R.id.BF_wynik)
                 val wynikBF = BF(lancuch, wzor)
 
-                if (wynikBF.first != null)
-                {
+                if (wynikBF.first != null) {
                     BF_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                }
-
-                else
-                {
+                } else {
                     BF_wynik_textView.text = "Nie znaleziono wzorca"
                 }
 
-                var czas  = measureTimeMillis{
+                var czas = measureTimeMillis {
                     BF(lancuch, wzor)
                 }
                 BF_czas.text = String.format("%s ms", czas)
 
 
-
                 val KMP_wynik_textView = findViewById<TextView>(R.id.KMP_wynik)
                 val wynikKMP = KMP(lancuch, wzor)
 
-                if (wynikKMP != -1)
-                {
+                if (wynikKMP != -1) {
                     KMP_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                }
-
-                else if (wynikKMP == -1)
-                {
+                } else if (wynikKMP == -1) {
                     KMP_wynik_textView.text = "Nie znaleziono wzorca"
                 }
 
@@ -104,17 +91,12 @@ class MainActivity : AppCompatActivity() {
                 KMP_czas.text = String.format("%s ms", czas)
 
 
-
                 val BM_wynik_textView = findViewById<TextView>(R.id.BM_wynik)
                 val wynikBM = BM(lancuch, wzor)
 
-                if (wynikBM != -1)
-                {
+                if (wynikBM != -1) {
                     BM_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                }
-
-                else if (wynikBM == -1)
-                {
+                } else if (wynikBM == -1) {
                     BM_wynik_textView.text = "Nie znaleziono wzorca"
                 }
 
@@ -124,17 +106,12 @@ class MainActivity : AppCompatActivity() {
                 BM_czas.text = String.format("%s ms", czas)
 
 
-
                 val RK_wynik_textView = findViewById<TextView>(R.id.RK_wynik)
                 val wynikRK = RK(lancuch, wzor)
 
-                if (wynikRK != -1)
-                {
+                if (wynikRK != -1) {
                     RK_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                }
-
-                else if (wynikRK == -1)
-                {
+                } else if (wynikRK == -1) {
                     RK_wynik_textView.text = "Nie znaleziono wzorca"
                 }
 
@@ -143,22 +120,20 @@ class MainActivity : AppCompatActivity() {
                 }
                 RK_czas.text = String.format("%s ms", czas)
             }
-        }
+                else
+                {
+                    findViewById<TextView>(R.id.textView_error).text = "Podaj dane!"
 
-        else
-        {
-            findViewById<TextView>(R.id.textView_error).text = "Podaj dane!"
+                    findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
+                    findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
 
-            findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
-            findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
-
-            findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
-            findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
-            findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
-            findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
-        }
-    }
+                    findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
+                    findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
+                    findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
+                    findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
+                }
             }
+        }
 // Algorytm: Brute Force
 fun BF(tekst: String, wzor: String): Pair<Int?, Long> {
     val x = tekst.length
@@ -175,4 +150,62 @@ fun BF(tekst: String, wzor: String): Pair<Int?, Long> {
     }
 
     return Pair(null, 0)
+}
+// Algorytm: KMP
+fun KMP(tekst: String, wzor: String): Int {
+    val x = tekst.length
+    val y = wzor.length
+
+    val nps = Array(y) { 0 }
+    var dlugosc = 0
+    var i = 1
+    while (i < y) {
+        if (wzor[i] == wzor[dlugosc])
+        {
+            dlugosc++
+            nps[i] = dlugosc
+            i++
+        }
+        else
+        {
+            if (dlugosc != 0)
+            {
+                dlugosc = nps[dlugosc - 1]
+            }
+            else
+            {
+                nps[i] = 0
+                i++
+            }
+        }
+    }
+
+    var j = 0
+    var i_s = 0
+    while (i_s < x)
+    {
+        if (wzor[j] == tekst[i_s])
+        {
+            j++
+            i_s++
+        }
+
+        if (j == y)
+        {
+            return i_s - j
+        }
+        else if (i_s < x && wzor[j] != tekst[i_s])
+        {
+            if (j != 0)
+            {
+                j = nps[j - 1]
+            }
+            else
+            {
+                i_s++
+            }
+        }
+    }
+
+    return -1
 }
