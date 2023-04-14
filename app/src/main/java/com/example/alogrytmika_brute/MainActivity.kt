@@ -28,109 +28,62 @@ class MainActivity : AppCompatActivity() {
 
                     findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
                     findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
-
-                    findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
-                } else if (dlugosc_wzoru <= ilosc_elementow.toInt()) {
-
-                    findViewById<TextView>(R.id.textView_error).text = ""
-
-                    // Generowanie łańcucha
-                    val losowa = java.util.Random()
-                    val stringBuilder = StringBuilder()
-                    for (i in 1..ilosc_elementow.toInt()) {
-                        stringBuilder.append(losowa.nextInt(10))
-                    }
-
-                    val lancuch = stringBuilder.toString()
-                    if (ilosc_elementow.toInt() > 15) {
-                        findViewById<TextView>(R.id.textView_lancuch).text = "Zbyt długi łańcuch"
-                    } else if (ilosc_elementow.toInt() <= 15) {
-                        findViewById<TextView>(R.id.textView_lancuch).text = lancuch
-                    }
+                    return@setOnClickListener
                 }
-                // Wzorzec
-                findViewById<TextView>(R.id.textView_wzorzec).text = wzor
+                //todo
+                findViewById<TextView>(R.id.textView_error).text = ""
 
-                // Czas
-                val BF_czas = findViewById<TextView>(R.id.BF_czas)
-                val KMP_czas = findViewById<TextView>(R.id.KMP_czas)
-                val BM_czas = findViewById<TextView>(R.id.BM_czas)
-                val RK_czas = findViewById<TextView>(R.id.RK_czas)
-
-
-                val BF_wynik_textView = findViewById<TextView>(R.id.BF_wynik)
-                val wynikBF = BF(lancuch, wzor)
-
-                if (wynikBF.first != null) {
-                    BF_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                } else {
-                    BF_wynik_textView.text = "Nie znaleziono wzorca"
+                // Generowanie łańcucha
+                val losowa = java.util.Random()
+                val stringBuilder = StringBuilder()
+                for (i in 1..ilosc_elementow.toInt()) {
+                    stringBuilder.append(losowa.nextInt(10))
                 }
-
-                var czas = measureTimeMillis {
-                    BF(lancuch, wzor)
+                val lancuch = StringBuilder().toString()
+                if (ilosc_elementow.toInt() > 15) {
+                    findViewById<TextView>(R.id.textView_lancuch).text = "Zbyt długi łańcuch"
+                } else if (ilosc_elementow.toInt() <= 15) {
+                    findViewById<TextView>(R.id.textView_lancuch).text = lancuch
                 }
-                BF_czas.text = String.format("%s ms", czas)
-
-
-                val KMP_wynik_textView = findViewById<TextView>(R.id.KMP_wynik)
-                val wynikKMP = KMP(lancuch, wzor)
-
-                if (wynikKMP != -1) {
-                    KMP_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                } else if (wynikKMP == -1) {
-                    KMP_wynik_textView.text = "Nie znaleziono wzorca"
-                }
-
-                czas = measureTimeMillis {
-                    KMP(lancuch, wzor)
-                }
-                KMP_czas.text = String.format("%s ms", czas)
-
-
-                val BM_wynik_textView = findViewById<TextView>(R.id.BM_wynik)
-                val wynikBM = BM(lancuch, wzor)
-
-                if (wynikBM != -1) {
-                    BM_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                } else if (wynikBM == -1) {
-                    BM_wynik_textView.text = "Nie znaleziono wzorca"
-                }
-
-                czas = measureTimeMillis {
-                    BM(lancuch, wzor)
-                }
-                BM_czas.text = String.format("%s ms", czas)
-
-
-                val RK_wynik_textView = findViewById<TextView>(R.id.RK_wynik)
-                val wynikRK = RK(lancuch, wzor)
-
-                if (wynikRK != -1) {
-                    RK_wynik_textView.text = "Wzorzec występuję w łańcuchu"
-                } else if (wynikRK == -1) {
-                    RK_wynik_textView.text = "Nie znaleziono wzorca"
-                }
-
-                czas = measureTimeMillis {
-                    RK(lancuch, wzor)
-                }
-                RK_czas.text = String.format("%s ms", czas)
-            } else {
-                findViewById<TextView>(R.id.textView_error).text = "Podaj dane!"
-
-                findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
-                findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
-
-                findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
-                findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
-                findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
-                findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
             }
+            val lancuch = StringBuilder().toString()
+            // Wzorzec
+            findViewById<TextView>(R.id.textView_wzorzec).text = wzor
+
+            // Czas
+            val BF_czas = findViewById<TextView>(R.id.BF_czas)
+            val KMP_czas = findViewById<TextView>(R.id.KMP_czas)
+            val BM_czas = findViewById<TextView>(R.id.BM_czas)
+            val RK_czas = findViewById<TextView>(R.id.RK_czas)
+
+
+            var czas = measureTimeMillis {
+                BF(lancuch, wzor)
+            }
+            BF_czas.text = String.format("%s ms", czas)
+
+
+            val wynikKMP = KMP(lancuch, wzor)
+
+
+            czas = measureTimeMillis {
+                KMP(lancuch, wzor)
+            }
+            KMP_czas.text = String.format("%s ms", czas)
+
+
+            czas = measureTimeMillis {
+                BM(lancuch, wzor)
+            }
+            BM_czas.text = String.format("%s ms", czas)
+
+
+            czas = measureTimeMillis {
+                RK(lancuch, wzor)
+            }
+            RK_czas.text = String.format("%s ms", czas)
         }
+
     }
 
     // Algorytm: Brute Force
@@ -217,6 +170,44 @@ class MainActivity : AppCompatActivity() {
             } else {
                 i += maxOf(tab_przesuniec[tekst[i].toInt()], y - j)
                 j = y - 1
+            }
+        }
+
+        return -1
+    }
+    // Algorytm RK:
+    fun RK(tekst: String, wzor: String): Int {
+        val x = tekst.length
+        val y = wzor.length
+        if (y > x)
+        {
+            return -1
+        }
+        val pierwsza = 101
+
+        var wzor_H = 0
+        var tekst_H = 0
+        var m = 1
+        for (i in 0 until y)
+        {
+            wzor_H = (wzor_H * pierwsza + wzor[i].toInt()) % Int.MAX_VALUE
+            tekst_H = (tekst_H * pierwsza + tekst[i].toInt()) % Int.MAX_VALUE
+            if (i < y - 1) m = (m * pierwsza) % Int.MAX_VALUE
+        }
+
+        for (i in 0..x - y)
+        {
+            if (tekst_H == wzor_H && tekst.substring(i, i + y) == wzor)
+            {
+                return i
+            }
+            if (i < x - y)
+            {
+                tekst_H = ((tekst_H - tekst[i].toInt() * m) * pierwsza + tekst[i + y].toInt()) % Int.MAX_VALUE
+                if (tekst_H < 0)
+                {
+                    tekst_H += Int.MAX_VALUE
+                }
             }
         }
 
