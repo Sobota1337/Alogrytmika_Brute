@@ -119,93 +119,107 @@ class MainActivity : AppCompatActivity() {
                     RK(lancuch, wzor)
                 }
                 RK_czas.text = String.format("%s ms", czas)
+            } else {
+                findViewById<TextView>(R.id.textView_error).text = "Podaj dane!"
+
+                findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
+                findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
+
+                findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
+                findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
+                findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
+                findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
             }
-                else
-                {
-                    findViewById<TextView>(R.id.textView_error).text = "Podaj dane!"
+        }
+    }
 
-                    findViewById<TextView>(R.id.textView_lancuch).text = "Łańcuch:"
-                    findViewById<TextView>(R.id.textView_wzorzec).text = "Wzorzec:"
+    // Algorytm: Brute Force
+    fun BF(tekst: String, wzor: String): Pair<Int?, Long> {
+        val x = tekst.length
+        val y = wzor.length
 
-                    findViewById<TextView>(R.id.BF_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.KMP_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.BM_wynik).text = "Wynik:"
-                    findViewById<TextView>(R.id.RK_wynik).text = "Wynik:"
+        for (i in 0..x - y) {
+            var j = 0
+            while (j < y && wzor[j] == tekst[i + j]) {
+                j++
+            }
+            if (j == y) {
+                return Pair(i, 0)
+            }
+        }
+
+        return Pair(null, 0)
+    }
+
+    // Algorytm: KMP
+    fun KMP(tekst: String, wzor: String): Int {
+        val x = tekst.length
+        val y = wzor.length
+
+        val nps = Array(y) { 0 }
+        var dlugosc = 0
+        var i = 1
+        while (i < y) {
+            if (wzor[i] == wzor[dlugosc]) {
+                dlugosc++
+                nps[i] = dlugosc
+                i++
+            } else {
+                if (dlugosc != 0) {
+                    dlugosc = nps[dlugosc - 1]
+                } else {
+                    nps[i] = 0
+                    i++
                 }
             }
         }
-// Algorytm: Brute Force
-fun BF(tekst: String, wzor: String): Pair<Int?, Long> {
-    val x = tekst.length
-    val y = wzor.length
 
-    for (i in 0..x - y) {
         var j = 0
-        while (j < y && wzor[j] == tekst[i + j]) {
-            j++
-        }
-        if (j == y) {
-            return Pair(i, 0)
-        }
-    }
-
-    return Pair(null, 0)
-}
-// Algorytm: KMP
-fun KMP(tekst: String, wzor: String): Int {
-    val x = tekst.length
-    val y = wzor.length
-
-    val nps = Array(y) { 0 }
-    var dlugosc = 0
-    var i = 1
-    while (i < y) {
-        if (wzor[i] == wzor[dlugosc])
-        {
-            dlugosc++
-            nps[i] = dlugosc
-            i++
-        }
-        else
-        {
-            if (dlugosc != 0)
-            {
-                dlugosc = nps[dlugosc - 1]
-            }
-            else
-            {
-                nps[i] = 0
-                i++
-            }
-        }
-    }
-
-    var j = 0
-    var i_s = 0
-    while (i_s < x)
-    {
-        if (wzor[j] == tekst[i_s])
-        {
-            j++
-            i_s++
-        }
-
-        if (j == y)
-        {
-            return i_s - j
-        }
-        else if (i_s < x && wzor[j] != tekst[i_s])
-        {
-            if (j != 0)
-            {
-                j = nps[j - 1]
-            }
-            else
-            {
+        var i_s = 0
+        while (i_s < x) {
+            if (wzor[j] == tekst[i_s]) {
+                j++
                 i_s++
             }
+
+            if (j == y) {
+                return i_s - j
+            } else if (i_s < x && wzor[j] != tekst[i_s]) {
+                if (j != 0) {
+                    j = nps[j - 1]
+                } else {
+                    i_s++
+                }
+            }
         }
+
+        return -1
     }
 
-    return -1
+    // Algorytm BM:
+    fun BM(tekst: String, wzor: String): Int {
+        val x = tekst.length
+        val y = wzor.length
+        if (y > x) return -1
+
+        val tab_przesuniec = IntArray(256) { y }
+        for (i in 0 until y - 1) {
+            tab_przesuniec[wzor[i].toInt()] = y - 1 - i
+        }
+
+        var i = y - 1
+        var j = y - 1
+        while (i < x) {
+            if (tekst[i] == wzor[j]) {
+                if (j == 0) return i
+                i--
+                j--
+            } else {
+                i += maxOf(tab_przesuniec[tekst[i].toInt()], y - j)
+                j = y - 1
+            }
+        }
+
+        return -1
+    }
 }
